@@ -1,4 +1,4 @@
 # Ethereum Implementation
-Learning purpose (Ethereum and Solidity)
+## Learning purpose (Ethereum and Solidity)
 
-# Description in progress
+### Description in progress
