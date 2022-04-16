@@ -2,5 +2,5 @@
 
 
 ### TODO-list
-1. Write that I learn
+1. Write what I learn
 2. Which technology I used during the project
