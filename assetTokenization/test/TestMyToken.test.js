@@ -36,7 +36,6 @@ contract("Token Test", async accounts => {
         let instance = await Token.deployed();
         let balanceOfAccount = await instance.balanceOf(initialHolder);
         await expect(instance.transfer(recipient, new BN(balanceOfAccount+1))).to.eventually.be.rejected;
-        // check if the balance is still the same
         await expect(instance.balanceOf(initialHolder)).to.eventually.be.a.bignumber.equal(balanceOfAccount);
     });
 });
