@@ -1,10 +1,12 @@
-var MajToken = artifacts.require("MajToken.sol");
-var MyTokenSale = artifacts.require("MyTokenSale.sol");
+var MajToken = artifacts.require("MajToken");
+var MyTokenSale = artifacts.require("MyTokenSale");
+require("dotenv").config({path: "../.env"});
+// console.log(process.env)
 
 module.exports = async function(deployer) {
-  let address = await web3.eth.getAccounts();
-  deployer.deploy(MajToken, 500);
-  deployer.deploy(MyTokenSale,1, address[0], MajToken.address);
-  let instance = await MyTokenSale.deployed();
-  instance.transfar(MyTokenSale.address, 500);
+    let addr = await web3.eth.getAccounts();
+    await deployer.deploy(MajToken, process.env.INITIAL_TOKENS);
+    await deployer.deploy(MyTokenSale, 1, addr[0], MajToken.address);
+    let tokenInstance = await MajToken.deployed();
+    await tokenInstance.transfer(MyTokenSale.address, process.env.INITIAL_TOKENS);
 };
