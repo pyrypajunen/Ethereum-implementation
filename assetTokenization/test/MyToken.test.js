@@ -1,4 +1,4 @@
-const Token = artifacts.require("MajToken");
+const Token = artifacts.require("MyToken.sol");
 
 const chai = require("./setupchai.js");
 const BN = web3.utils.BN;

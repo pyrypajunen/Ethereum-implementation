@@ -1,5 +1,6 @@
-const TokenSale = artifacts.require("MajTokenSale");
-const Token = artifacts.require("MajToken");
+const TokenSale = artifacts.require("MyTokenSale.sol");
+const Token = artifacts.require("MyToken.sol");
+const KycContract = artifacts.require("KycContract.sol");
 
 const chai = require("./setupchai.js");
 const BN = web3.utils.BN;
@@ -27,7 +28,11 @@ contract("Token Test", function(accounts) {
         let tokenInstance = await Token.deployed();
         let tokenSaleInstance = await TokenSale.deployed();
         let balanceBeforeAccount = await tokenInstance.balanceOf.call(recipient);
+        await expect(tokenSaleInstance.sendTransaction({from: recipient, value: web3.utils.toWei("1", "wei")})).to.be.rejected;
+        await expect(balanceBeforeAccount).to.be.bignumber.equal(await tokenInstance.balanceOf.call(recipient));
     
+        let kycInstance = await KycContract.deployed();
+        await kycInstance.setKycCompleted(recipient);
         await expect(tokenSaleInstance.sendTransaction({from: recipient, value: web3.utils.toWei("1", "wei")})).to.be.fulfilled;
         return expect(balanceBeforeAccount + 1).to.be.bignumber.equal(await tokenInstance.balanceOf.call(recipient));
     
