@@ -1,4 +1,3 @@
 # Ethereum Implementation (The portfolio is in progress)
 ## Learning purpose (Ethereum and Solidity)
-
-Make a short description what i learnt during this project and which are my next project.
+During these three small projects, I've learned to use Truffle, Ganache, Open Zeppelin, Metamask, Solidity and web3.js library. I studied the theory behind those technologies as well, which helps me to understand Ethereum blockchain development deeper.
