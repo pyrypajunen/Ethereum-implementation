@@ -17,8 +17,6 @@ contract("Token Test", async (accounts) => {
     it("all tokens should be in my account", async () => {
         let instance = this.myToken;
         let totalSupply = await instance.totalSupply();
-        //let balance = await instance.balanceOf(accounts[0]);
-        //assert.equal(balance.valueOf(), initialSupply.valueOf(), "The balance was not the same");
         return expect(instance.balanceOf(deployerAccount)).to.eventually.be.a.bignumber.equal(totalSupply);
     })
 
