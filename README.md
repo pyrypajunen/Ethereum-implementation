@@ -1,7 +1,7 @@
 # Ethereum Implementation (The portfolio is in progress)
-## Learning purpose (Ethereum and Solidity)
-During these three small projects, I've learned to use Truffle, Ganache, Open Zeppelin, Metamask, Solidity and web3.js libraries. I studied the theory behind those technologies as well, which helps me to understand Ethereum blockchain development deeper.
+## Ethereum and Solidity
 
-Technologies for testing: Chai, mocha, ...
+I've learned to use Truffle, Ganache, Open Zeppelin, Metamask, Solidity, and web3.js libraries during these three small projects. Also, I used chai and mocha frameworks for testing my smart contracts. I also studied the theory behind those technologies, which helped me understand Ethereum blockchain development deeper. 
 
-More discription about the projects here...
+I am constantly learning more things about smart contract development; I keep this portfolio in progress. These projects are only for learning purposes.
+
