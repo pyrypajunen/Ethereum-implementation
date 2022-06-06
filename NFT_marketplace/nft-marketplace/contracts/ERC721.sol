@@ -21,7 +21,7 @@ contract ERC721 {
         // setting the address pf nft owner to check the mapping
         // of the address from tokenOwner at the tokenId
         address owner = _tokenOwner[toeknID];
-        // return truthiness that address is not zero
+        // return truth that address is not zero
         return owner != address(0);
     }
 

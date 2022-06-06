@@ -8,16 +8,21 @@ contract ERC721Enumerable is ERC721 {
     // total supply
     uint[] private _allTokens;
 
+    // mapping from tokenId to position in _allTokens array
     mapping(uint => uint) private _allTokensIndex;
+
+    // mapping of owner to list fo all owner token ids
     mapping(address => uint[]) private _ownedTokens;
+
+    // mapping from token ID index of the owner tokens list
     mapping(uint => uint) private  _ownedTokensIndex;
 
     /// @notice Count NFTs tracked by this contract
     /// @return A count of valid NFTs tracked by this contract, where each one of
     ///  them has an assigned and queryable owner not equal to the zero address
-    function totalSupply() external view returns (uint256) {
-        return _allTokens.length;
-    }
+    //function totalSupply() external view returns (uint256) {
+        //return _allTokens.length;
+    //}
 
     /// @notice Enumerate valid NFTs
     /// @dev Throws if `_index` >= `totalSupply()`.
@@ -41,6 +46,18 @@ contract ERC721Enumerable is ERC721 {
 
     function _mint(address _to, uint _tokenId) internal override(ERC721) {
         super._mint(_to, _tokenId);
+        // 1. add tokens to the owner
+        _addTokensToAllTokensEbymeration(_tokenId);
+        // 2. All tokens to our totalSupply - to allTokens
     }
 
+    function _addTokensToAllTokensEbymeration(uint _tokenId) private {
+        _allTokens.push(_tokenId);
+    }
+
+    function totalSupply() public view returns(uint) {
+        return _allTokens.length;
+    }
+
+    
 }
