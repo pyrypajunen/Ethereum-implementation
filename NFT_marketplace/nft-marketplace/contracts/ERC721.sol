@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-
+// Here are the ERC721 standards ONLY!
 contract ERC721 {
 
     // remember 3 indexed keyword are MAX per event! 
@@ -14,13 +14,16 @@ contract ERC721 {
     // mapping for token id to the owner
     mapping(uint => address) private _tokenOwner;
 
-    // Mapping from owner to number of owned tokens
+    // mapping from owner to number of owned tokens
     mapping(address => uint) private _ownedTokensCount;
 
-    function _exists(uint toeknID) internal view returns(bool) {
-        // setting the address pf nft owner to check the mapping
+    // mapping from token id to approval addresses
+    mapping(uint => address) private _tokenApprovals;
+
+    function _exists(uint _tokenId) internal view returns(bool) {
+        // setting the address of nft owner to check the mapping
         // of the address from tokenOwner at the tokenId
-        address owner = _tokenOwner[toeknID];
+        address owner = _tokenOwner[_tokenId];
         // return truth that address is not zero
         return owner != address(0);
     }
@@ -42,10 +45,25 @@ contract ERC721 {
         return _ownedTokensCount[_owner];
     }
 
-    function ownerOf(uint _tokenId) external view returns(address) {
+    function ownerOf(uint _tokenId) public   view returns(address) {
         address owner = _tokenOwner[_tokenId];
         require(owner != address(0), 'Owner query for non-existent token');
         return owner;
     }
+
+    function _transferFrom(address _from, address _to, uint _tokenId) internal {
+        require(_to != address(0), 'Error - ERC721 transfer to the zero address ');
+        require(ownerOf(_tokenId) == _from, "Error - Trying to transfer a token the address does not own");
+        _ownedTokensCount[_from] -= 1;
+        _ownedTokensCount[_to] += 1;
+        _tokenOwner[_tokenId] = _to;
+        emit Transfer(_from, _to, _tokenId);
+        
+    }
+
+    function transferFrom(address _from, address _to, uint _tokenId) public payable {
+        _transferFrom(_from, _to, _tokenId);
+    }
+
 
 }
