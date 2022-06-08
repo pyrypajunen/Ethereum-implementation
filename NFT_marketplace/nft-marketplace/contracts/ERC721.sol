@@ -7,9 +7,20 @@ contract ERC721 {
     // remember 3 indexed keyword are MAX per event! 
     // save gas as much as possible-
     event Transfer(
-        address indexed _from, 
-        address indexed _to, 
+        address indexed from, 
+        address indexed to, 
         uint indexed tokenId);
+
+    event Approval(
+        address indexed owner, 
+        address indexed approved,
+        uint256 indexed tokenId);
+
+
+    event ApprovalForAll( 
+        address indexed owner, 
+        address indexed operator, 
+        bool indexed approved);
 
     // mapping for token id to the owner
     mapping(uint => address) private _tokenOwner;
@@ -20,6 +31,9 @@ contract ERC721 {
     // mapping from token id to approval addresses
     mapping(uint => address) private _tokenApprovals;
 
+    // Mapping from owner to operator approvals
+    mapping(address => mapping(address => bool)) private _operatorApprovals;
+
     function _exists(uint _tokenId) internal view returns(bool) {
         // setting the address of nft owner to check the mapping
         // of the address from tokenOwner at the tokenId
@@ -29,9 +43,9 @@ contract ERC721 {
     }
 
     function _mint(address _to, uint _tokenId) internal virtual {
-        require(_to != address(0), "ERC721: minting to the zero address");
+        require(_to != address(0), "Error - ERC721: minting to the zero address");
         // Check if the token is already minted
-        require(!_exists(_tokenId), "ERC721: token already minted");
+        require(!_exists(_tokenId), "Error - ERC721: token already minted");
         // this will give an address to token
         _tokenOwner[_tokenId] = _to;
         // add 1 for user owned tokens
@@ -41,13 +55,13 @@ contract ERC721 {
     }
 
     function balanceOf(address _owner) public view returns(uint) {
-        require(_owner != address(0), 'Owner query for non-existent token');
+        require(_owner != address(0), 'Error - Owner query for non-existent token');
         return _ownedTokensCount[_owner];
     }
 
     function ownerOf(uint _tokenId) public   view returns(address) {
         address owner = _tokenOwner[_tokenId];
-        require(owner != address(0), 'Owner query for non-existent token');
+        require(owner != address(0), 'Error - Owner query for non-existent token');
         return owner;
     }
 
@@ -61,9 +75,37 @@ contract ERC721 {
         
     }
 
-    function transferFrom(address _from, address _to, uint _tokenId) public payable {
-        _transferFrom(_from, _to, _tokenId);
+    function transferFrom(address from, address to, uint tokenId) public payable {
+        require(_isApprovedOrOwner(msg.sender, tokenId), "Error - It's not approved or owner");
+        _transferFrom(from, to, tokenId);
     }
 
+    function setApprovalForAll(address operator, bool approved) public  {
+        require(operator != msg.sender, "ERC721: approve to caller");
+        _operatorApprovals[msg.sender][operator] = approved;
+        emit ApprovalForAll(msg.sender, operator, approved);
+    }
 
+    function approve(address to, uint256 tokenId) public {
+        address owner = ownerOf(tokenId);
+        require(to != owner, "Error - approval to current owner");
+        require(msg.sender == owner, "Error - Current caller is not the owner of the token");
+        _tokenApprovals[tokenId] = to;
+        emit Approval(owner, to, tokenId);
+    }
+
+    function getApproved(uint256 tokenId) public view returns(address) {
+        require(_exists(tokenId), "ERC721: approved query for nonexistent token");
+        return _tokenApprovals[tokenId];
+    }
+
+    function isApprovedForAll(address owner, address operator) public view returns (bool) {
+        return _operatorApprovals[owner][operator];
+    }
+
+    function _isApprovedOrOwner(address spender, uint256 tokenId) internal view returns(bool) {
+        require(_exists(tokenId), "Token does not exist");
+        address owner = ownerOf(tokenId);
+        return(spender == owner || spender == getApproved(tokenId) || isApprovedForAll(owner, spender));
+    }
 }
