@@ -1,1 +1,0 @@
-const CryptoBirdz = artifacts.require("KryptoBirdz");
