@@ -1,26 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+// imports (brigns IREC165 interface as well)
+import './ERC165.sol';
+import './interfaces/IERC721.sol';
+
 // Here are the ERC721 standards ONLY!
-contract ERC721 {
-
-    // remember 3 indexed keyword are MAX per event! 
-    // save gas as much as possible-
-    event Transfer(
-        address indexed from, 
-        address indexed to, 
-        uint indexed tokenId);
-
-    event Approval(
-        address indexed owner, 
-        address indexed approved,
-        uint256 indexed tokenId);
-
-
-    event ApprovalForAll( 
-        address indexed owner, 
-        address indexed operator, 
-        bool indexed approved);
+contract ERC721 is ERC165, IERC721 {
 
     // mapping for token id to the owner
     mapping(uint => address) private _tokenOwner;
@@ -33,6 +19,16 @@ contract ERC721 {
 
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
+
+    constructor() {
+        _registerInterface(bytes4(keccak256('supportsInterface(bytes4)')^
+                            bytes4(keccak256('balanceOf(bytes4)')^
+                            bytes4(keccak256('ownerOf(bytes4)')^
+                            bytes4(keccak256('approve(bytes4)')^
+                            bytes4(keccak256('setApprovalForAll(bytes4)')^
+                            bytes4(keccak256('getApproved(bytes4)')^
+                            bytes4(keccak256('isApprovedForAll(bytes4)')))))))));
+    }
 
     function _exists(uint _tokenId) internal view returns(bool) {
         // setting the address of nft owner to check the mapping
@@ -75,7 +71,7 @@ contract ERC721 {
         
     }
 
-    function transferFrom(address from, address to, uint tokenId) public payable {
+    function transferFrom(address from, address to, uint tokenId) public  {
         require(_isApprovedOrOwner(msg.sender, tokenId), "Error - It's not approved or owner");
         _transferFrom(from, to, tokenId);
     }
@@ -86,7 +82,7 @@ contract ERC721 {
         emit ApprovalForAll(msg.sender, operator, approved);
     }
 
-    function approve(address to, uint256 tokenId) public {
+    function approve(address to, uint256 tokenId) payable public override {
         address owner = ownerOf(tokenId);
         require(to != owner, "Error - approval to current owner");
         require(msg.sender == owner, "Error - Current caller is not the owner of the token");
