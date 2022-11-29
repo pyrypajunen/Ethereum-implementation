@@ -13,4 +13,9 @@ I am constantly learning more things about smart contract development; I keep th
 
 
 
+## DeFi Yield farming 
+
+Please, also check my Defi project during distributed systems course:  https://github.com/pyrypajunen/distributed-systems-project (In progress - will be done until 19.12.22)
+
+
 
